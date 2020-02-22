@@ -16,15 +16,47 @@ def GetScannedItem():
 
 def GetRecipes():
     RecipeList = []
+    Complete = 1
 
     Recipes = session.query(Recipe)
     
     for item in Recipes:
+        Ingredients = session.query(Ingredient).filter(Ingredient.RECIPEID == item.ID)
+
+        for ingredientItem in Ingredients:
+            GenericItems = session.query(Generic).filter(Generic.ID == ingredientItem.GENERICID)
+
+            for genericIngredient in GenericItems:
+                if ingredientItem.SUBTRACTAMT > genericIngredient.TOTALAMT:
+                    Complete = 0
+                    break
+
+            if Complete == 0:
+                break
+
+
         IndividualRecipe = {
             "id": item.ID,
-            "name": item.TITLE
+            "name": item.TITLE,
+            "complete": Complete
         }
 
         RecipeList.append(IndividualRecipe)
 
     return json.dumps(RecipeList)
+
+def GetInventory():
+    GenericInventoryList = []
+
+    GenericInventoryItems = session.query(Generic)
+
+    for item in GenericInventoryItems:
+        InventoryItem = {
+            "id": item.ID,
+            "name": item.TITLE,
+            "total": str(item.TOTALAMT)
+        }
+
+        GenericInventoryList.append(InventoryItem)
+
+    return json.dumps(GenericInventoryList)

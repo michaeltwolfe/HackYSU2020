@@ -17,5 +17,11 @@ def GetRecipes():
         items = storage.GetRecipes()
         return items
 
+@app.route("/v1/getInventory", methods=["GET"])
+def GetInventory():
+        if request.method == "GET":
+                items = storage.GetInventory()
+                return items
+
 if __name__ == "__main__":
     app.run()
