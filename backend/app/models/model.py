@@ -5,12 +5,20 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine("mysql://mike:plusthepanzers4@localhost/HackYSU2020")
+engine = create_engine("mysql+pymysql://mike:plusthepanzers4@localhost/HackYSU2020")
 
 Base = declarative_base(engine)
 
 class Codes(Base):
     __tablename__ = "Codes"
+    __table_args__ = {"autoload": True}
+
+class Brand(Base):
+    __tablename__ = "Brand"
+    __table_args__ = {"autoload": True}
+
+class Generic(Base):
+    __tablename__ = "Generic"
     __table_args__ = {"autoload": True}
 
 class Pantry(Base):
@@ -19,10 +27,6 @@ class Pantry(Base):
 
 class Instruction(Base):
     __tablename__ = "Instruction"
-    __table_args__ = {"autoload": True}
-
-class Menu(Base):
-    __tablename__ = "Menu"
     __table_args__ = {"autoload": True}
 
 class Ingredient(Base):
