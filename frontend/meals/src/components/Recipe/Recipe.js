@@ -1,21 +1,24 @@
 import React from 'react';
 
-import classes from './Recipe.css';
-import RecipeIngredient from './RecipeIngredient/RecipeIngredient';
+import classes from './Recipe.css'
 
-const recipe = (props) => {
-    const transformedIngredients = Object.keys(props.ingredients)
-        .map(igKey => {
-            return [...Array(props.ingredients[igKey])].map((_, i) => {
-                return <RecipeIngredient key={igKey + i} type={igKey} />
-            });
-        });
-
-    return (
-        <div className={classes.Recipe}>
-            <p>Test</p>
-        </div>
-    );
-};
+const recipe = (props) => (
+    <div>
+        <table className="Recipe">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr className={props.complete === 0 ? "Bad" : "Good"}>
+                <td>{props.keys}</td>
+                <td>{props.title}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+);
 
 export default recipe;

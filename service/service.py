@@ -3,6 +3,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from model import *
+import re
 
 from scanner import barcode_reader
 from checks import Checks
@@ -11,6 +13,14 @@ engine = create_engine("mysql+pymysql://mike:plusthepanzers4@localhost/HackYSU20
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+def FixItemAmount(amount):
+    amount = re.sub("\(.*\)|\s-\s.*", "",amount)
+    
+    if "oz" in amount or "OZ" in amount:
+        return amount.split()[0]
+    elif "gallon" in amount:
+        return float(amount.split()[0]) *128
 
 while True:
     #get code
@@ -28,17 +38,33 @@ while True:
         if apiData["description"] == "":
             print("Nothing was found")
         else:
-            #insert new record into Codes table
-            NewCode = Codes (
-                UPCCODE = upcNumber
-            )
-
-            session.add(NewCode)
-            session.commit()
+            #fix amount
+            amount = FixItemAmount(apiData["amount"])
 
 
-            
-
-
-    else:
+    #else:
         #insert records
+        ItemAmount = session.query(Codes).filter(Codes.UPCCODE == upcNumber)
+
+        for item in ItemAmount:
+            BrandId = item.BRANDID
+            Size = item.ITEMSIZE
+
+            CurrentAmount = session.query(Brand).filter(Brand.ID == BrandId)
+
+            for itemAmount in CurrentAmount:
+                NewTotal = itemAmount.AMOUNT + Size
+                GenericId = itemAmount.GENERICID
+
+
+                session.query(Brand).filter(Brand.ID == BrandId).update({"AMOUNT": NewTotal})
+                session.commit()
+
+                GenericAmount = session.query(Generic).filter(Generic.ID == GenericId)
+
+                for genericItem in GenericAmount:
+                    NewGenericTotal = genericItem.TOTALAMT + Size
+                    session.query(Generic).filter(Generic.ID == GenericId).update({"TOTALAMT": NewGenericTotal})
+                    session.commit()
+
+    session.close()

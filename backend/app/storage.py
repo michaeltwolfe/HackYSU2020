@@ -41,6 +41,8 @@ def GetRecipes():
             "complete": Complete
         }
 
+        session.close()
+
         RecipeList.append(IndividualRecipe)
 
     return json.dumps(RecipeList)
@@ -56,6 +58,8 @@ def GetInventory():
             "name": item.TITLE,
             "total": str(item.TOTALAMT)
         }
+
+        session.close()
 
         GenericInventoryList.append(InventoryItem)
 

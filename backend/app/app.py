@@ -24,4 +24,4 @@ def GetInventory():
                 return items
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

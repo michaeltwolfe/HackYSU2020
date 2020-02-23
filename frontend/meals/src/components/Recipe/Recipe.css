@@ -14,3 +14,11 @@
         height: 300px;
     }
 }
+
+.Good {
+    color: green;
+}
+
+.Bad {
+    color: red;
+}
