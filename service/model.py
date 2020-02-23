@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine("mysql+pymysql://root:password@localhost/ysu")
+engine = create_engine("mysql+pymysql://mike:plusthepanzers4@localhost/HackYSU2020")
 
 Base = declarative_base(engine)
 
